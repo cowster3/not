@@ -1,0 +1,41 @@
+# Import required libraries
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+
+# Define the website URL and create the browser driver object
+url = "https://www.axs.com"
+driver = webdriver.Chrome(executable_path="path/to/chromedriver")
+
+# Load the website
+driver.get(url)
+
+# Find the search input field and enter the search query
+search_field = driver.find_element_by_xpath("//input[@name='q']")
+search_field.send_keys("Event name or keyword")
+search_field.send_keys(Keys.RETURN)
+
+# Wait for the search results page to load
+search_results = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.XPATH, "//section[contains(@class, 'SearchResults')]"))
+)
+
+# Find the first search result and click on it to go to the event page
+first_result = search_results.find_element_by_xpath("//a[contains(@class, 'SearchResults__Result')]")
+first_result.click()
+
+# Wait for the event page to load
+event_page = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.XPATH, "//div[contains(@class, 'EventDetails')]"))
+)
+
+# Find the buy ticket button and click it
+buy_button = event_page.find_element_by_xpath("//a[@data-testid='event-header-buy-tickets-link']")
+buy_button.click()
+
+# Close the browser
+driver.quit()
